@@ -5,7 +5,6 @@ function collide (foods: any[], enemies: any[]) {
     for (let value of foods) {
         if (plyr1.overlapsWith(value) == true) {
             value.destroy()
-            game.splash("Capture the enemy quickly, you only have 3 seconds!")
             info.startCountdown(4)
             ateFood = true
         }
@@ -208,7 +207,7 @@ en4
 scene.cameraFollowSprite(plyr1)
 controller.moveSprite(plyr1, 100, 100)
 tiles.placeOnTile(en4, tiles.getTileLocation(12, 13))
-game.splash("You must eat the food before you can capture the enemy.")
+game.splash("You will have 4 seconds to capture the enemy after eating food!")
 forever(function () {
     collide(foods, enemies)
 })
