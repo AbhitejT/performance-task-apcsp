@@ -1,12 +1,22 @@
 namespace SpriteKind {
     export const car = SpriteKind.create()
 }
+function setDifficulty () {
+    difficulty = game.askForNumber("1: easy, 2: mediocre, 3:hard", 1)
+    if (difficulty == 1) {
+        countDown = 4
+    } else if (difficulty == 2) {
+        countDown = 3
+    } else {
+        countDown = 2
+    }
+}
 function collide (foods: any[], enemies: any[]) {
     for (let value of foods) {
-        if (plyr1.overlapsWith(value) == true) {
-            value.destroy()
-            info.startCountdown(4)
+        if (plyr1.overlapsWith(value) == true && ateFood == false) {
             ateFood = true
+            value.destroy()
+            info.startCountdown(countDown)
         }
     }
     for (let value of enemies) {
@@ -19,6 +29,8 @@ function collide (foods: any[], enemies: any[]) {
     }
 }
 let ateFood = false
+let difficulty = 0
+let countDown = 0
 let total: number[] = []
 let enemies: Sprite[] = []
 let foods: Sprite[] = []
@@ -118,6 +130,7 @@ tiles.placeOnTile(plyr1, tiles.getTileLocation(6, 9))
 tiles.placeOnTile(en1, tiles.getTileLocation(2, 13))
 tiles.placeOnTile(en2, tiles.getTileLocation(2, 1))
 tiles.placeOnTile(en3, tiles.getTileLocation(13, 4))
+tiles.placeOnTile(en4, tiles.getTileLocation(12, 13))
 let food1 = sprites.create(img`
     . . . . c c c b b b b b . . . . 
     . . c c b 4 4 4 4 4 4 b b b . . 
@@ -209,14 +222,11 @@ en4
 total = []
 scene.cameraFollowSprite(plyr1)
 controller.moveSprite(plyr1, 100, 100)
-tiles.placeOnTile(en4, tiles.getTileLocation(12, 13))
-game.splash("You will have 4 seconds to capture the enemy after eating food!")
-forever(function () {
-    if (total.length == 4) {
-        game.over(true)
-        game.splash("Hooray")
-    }
-})
+setDifficulty()
+game.splash("You will have these many seconds to capture the enemy after eating food:", countDown)
 forever(function () {
     collide(foods, enemies)
+    if (total.length == 4) {
+        game.over(true)
+    }
 })
